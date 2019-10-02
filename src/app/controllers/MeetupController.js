@@ -3,7 +3,6 @@ import { Op } from 'sequelize';
 import { isBefore, startOfDay, endOfDay, parseISO } from 'date-fns';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
-import File from '../models/File';
 
 class MeetupController {
   async index(req, res) {
@@ -25,11 +24,6 @@ class MeetupController {
           model: User,
           as: 'user',
           attributes: ['id', 'name'],
-        },
-        {
-          model: File,
-          as: 'file',
-          attributes: ['id', 'name', 'path'],
         },
       ],
       limit: 10,
@@ -59,7 +53,7 @@ class MeetupController {
     if (isBefore(parseISO(date), new Date())) {
       return res
         .status(400)
-        .json({ error: 'Cannot insert an meetup to a passed date!!' });
+        .json({ error: 'Cannot insert an meetup to a passed date!' });
     }
 
     const meetup = await Meetup.create({
