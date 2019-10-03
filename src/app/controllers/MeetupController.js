@@ -1,8 +1,12 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
 import { isBefore, startOfDay, endOfDay, parseISO } from 'date-fns';
-import Meetup from '../models/Meetup';
 import User from '../models/User';
+import Meetup from '../models/Meetup';
+import Subscription from '../models/Subscription';
+
+import CancellationMail from '../jobs/CancellationMail';
+import Queue from '../../lib/Queue';
 
 class MeetupController {
   async index(req, res) {
@@ -109,7 +113,16 @@ class MeetupController {
   }
 
   async delete(req, res) {
-    const meetup = await Meetup.findOne({ where: { id: req.params.id } });
+    const meetup = await Meetup.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name'],
+        },
+      ],
+    });
 
     if (!meetup) {
       return res.status(400).json({ error: 'Meetup does not exists!' });
@@ -127,9 +140,21 @@ class MeetupController {
       });
     }
 
-    await meetup.destroy();
+    const subscriptions = await Subscription.findAll({ where: { meetup_id: meetup.id } });
 
-    return res.send();
+    subscriptions.map(async subscription => {
+      const user = await User.findByPk(subscription.user_id);
+
+      await Queue.add(CancellationMail.key, {
+        meetup,
+        user,
+      });
+    });
+
+    return res.json(subscriptions);
+    //await meetup.destroy();
+
+    //return res.send();
   }
 }
 export default new MeetupController();
