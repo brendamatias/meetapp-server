@@ -1,4 +1,12 @@
+import { format, parseISO } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import Mail from '../../lib/Mail';
+
+/* Data não inserindo, validar depois */
+const formatDate = date =>
+  format(parseISO(date), "'dia' dd 'de'  MMMM', às' H:mm'h'", {
+    locale: pt,
+  });
 
 class SubscriptionMail {
   get key() {
@@ -14,9 +22,12 @@ class SubscriptionMail {
       template: 'subscription',
       context: {
         organizer: meetup.user.name,
-        meetup: meetup.title,
-        user: user.name,
-        email: user.email,
+        meetupTitle: meetup.title,
+        meetupImage: meetup.path,
+        // meetupDate: formatDate(meetup.date),
+        userName: user.name,
+        userEmail: user.email,
+        // userDate: formatDate(new Date()),
       },
     });
   }
