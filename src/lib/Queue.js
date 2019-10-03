@@ -2,10 +2,11 @@ import Bee from 'bee-queue';
 import * as Sentry from '@sentry/node';
 import sentryConfig from '../config/sentry';
 import SubscriptionMail from '../app/jobs/SubscriptionMail';
+import CancellationMail from '../app/jobs/CancellationMail';
 
 Sentry.init(sentryConfig);
 
-const jobs = [SubscriptionMail];
+const jobs = [SubscriptionMail, CancellationMail];
 
 class Queue {
   constructor() {
