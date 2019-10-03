@@ -28,6 +28,7 @@
     "pg-hstore": "^2.3.3",
     "sentry": "^0.1.2",
     "sequelize": "^5.19.1",
+    "youch": "^2.0.10",
     "yup": "^0.27.0"
   },
   "devDependencies": {

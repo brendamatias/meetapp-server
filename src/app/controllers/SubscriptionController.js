@@ -109,9 +109,9 @@ class SubscriptionController {
   }
 
   async teste(req, res) {
-    const user = await User.findByPk(req.userId);
+    const user = await User.findByPk(6);
 
-    const meetup = await Meetup.findByPk(req.params.meetupId, {
+    const meetup = await Meetup.findByPk(4, {
       include: [
         {
           model: User,
