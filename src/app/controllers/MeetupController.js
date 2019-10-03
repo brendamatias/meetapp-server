@@ -151,10 +151,9 @@ class MeetupController {
       });
     });
 
-    return res.json(subscriptions);
-    //await meetup.destroy();
+    await meetup.destroy();
 
-    //return res.send();
+    return res.send();
   }
 }
 export default new MeetupController();
