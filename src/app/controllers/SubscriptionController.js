@@ -1,7 +1,11 @@
 import { Op } from 'sequelize';
 import { addHours } from 'date-fns';
+import User from '../models/User';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
+
+import SubscriptionMail from '../jobs/SubscriptionMail';
+import Queue from '../../lib/Queue';
 
 class SubscriptionController {
   async index(req, res) {
@@ -27,8 +31,16 @@ class SubscriptionController {
   }
 
   async store(req, res) {
-    const meetup = await Meetup.findOne({
-      where: { id: req.params.meetupId },
+    const user = await User.findByPk(req.userId);
+
+    const meetup = await Meetup.findByPk(req.params.meetupId, {
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name', 'email'],
+        },
+      ],
     });
 
     if (!meetup) {
@@ -88,7 +100,33 @@ class SubscriptionController {
       meetup_id: req.params.meetupId,
     });
 
+    await Queue.add(SubscriptionMail.key, {
+      meetup,
+      user,
+    });
+
     return res.json(subscription);
+  }
+
+  async teste(req, res) {
+    const user = await User.findByPk(req.userId);
+
+    const meetup = await Meetup.findByPk(req.params.meetupId, {
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
+
+    await Queue.add(SubscriptionMail.key, {
+      meetup,
+      user,
+    });
+
+    return res.json('subscription');
   }
 }
 export default new SubscriptionController();
