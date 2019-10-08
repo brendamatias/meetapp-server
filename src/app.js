@@ -21,7 +21,6 @@ class App {
     this.exceptionHandler();
   }
 
-  /* Para enviar e receber requisições em formato Json */
   middlewares() {
     this.server.use(Sentry.Handlers.requestHandler());
     this.server.use(cors());

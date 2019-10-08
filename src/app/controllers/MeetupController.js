@@ -140,7 +140,9 @@ class MeetupController {
       });
     }
 
-    const subscriptions = await Subscription.findAll({ where: { meetup_id: meetup.id } });
+    const subscriptions = await Subscription.findAll({
+      where: { meetup_id: meetup.id },
+    });
 
     subscriptions.map(async subscription => {
       const user = await User.findByPk(subscription.user_id);
