@@ -90,7 +90,7 @@ class MeetupController {
     const meetup = await Meetup.findByPk(req.params.id);
 
     if (!meetup) {
-      return res.status(400).json({ error: 'Meetup does not exists' });
+      return res.status(400).json({ error: 'Meetup does not exists.' });
     }
 
     if (meetup.past) {
@@ -104,7 +104,7 @@ class MeetupController {
     }
 
     if (isBefore(parseISO(req.body.date), new Date())) {
-      return res.status(400).json({ error: 'Past dates are not allowed' });
+      return res.status(400).json({ error: 'Past dates are not allowed.' });
     }
 
     await meetup.update(req.body);
