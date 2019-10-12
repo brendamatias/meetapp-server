@@ -4,13 +4,17 @@ import User from '../models/User';
 class UserController {
   async store(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string().required('Name is required!'),
+      name: Yup.string()
+        .required('Name is required!')
+        .max(250, 'Your name can not exceed 250 characters!'),
       email: Yup.string()
         .email()
-        .required('Email is required!'),
+        .required('Email is required!')
+        .max(150, 'Your email can not exceed 150 characters!'),
       password: Yup.string()
         .required('Password is required!')
-        .min(6, 'Your password must have at least 6 characters!'),
+        .min(6, 'Your password must have at least 6 characters!')
+        .max(20, 'Your password can not exceed 20 characters!'),
     });
 
     try {
@@ -36,11 +40,14 @@ class UserController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      name: Yup.string(),
-      email: Yup.string().email(),
-      oldPassword: Yup.string().min(6),
+      name: Yup.string().max(250, 'Your name can not exceed 250 characters!'),
+      email: Yup.string()
+        .email()
+        .max(150, 'Your email can not exceed 150 characters!'),
+      oldPassword: Yup.string(),
       password: Yup.string()
-        .min(6)
+        .min(6, 'Your password must have at least 6 characters!')
+        .max(20, 'Your password can not exceed 20 characters!')
         .when('oldPassword', (oldPassword, field) =>
           /*
             Se a senha antiga for inserida a nova senha
@@ -58,8 +65,10 @@ class UserController {
       ),
     });
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails.' });
+    try {
+      await schema.validate(req.body);
+    } catch (err) {
+      return res.status(400).json({ error: err.errors });
     }
 
     const { email, oldPassword } = req.body;
