@@ -26,6 +26,11 @@ class SubscriptionController {
           required: true,
           include: [
             {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'name'],
+            },
+            {
               model: File,
               as: 'file',
               attributes: ['id', 'name', 'path', 'url'],
