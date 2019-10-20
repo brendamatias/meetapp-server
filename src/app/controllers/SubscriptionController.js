@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import { addHours } from 'date-fns';
 import User from '../models/User';
+import File from '../models/File';
 import Meetup from '../models/Meetup';
 import Subscription from '../models/Subscription';
 
@@ -23,6 +24,13 @@ class SubscriptionController {
             },
           },
           required: true,
+          include: [
+            {
+              model: File,
+              as: 'file',
+              attributes: ['id', 'name', 'path', 'url'],
+            },
+          ],
         },
       ],
     });
