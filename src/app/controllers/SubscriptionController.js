@@ -107,26 +107,6 @@ class SubscriptionController {
 
     return res.json(subscription);
   }
-
-  async teste(req, res) {
-    const user = await User.findByPk(6);
-
-    const meetup = await Meetup.findByPk(4, {
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['name', 'email'],
-        },
-      ],
-    });
-
-    await Queue.add(SubscriptionMail.key, {
-      meetup,
-      user,
-    });
-
-    return res.json('subscription');
-  }
 }
+
 export default new SubscriptionController();
