@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 import { isBefore, startOfDay, endOfDay, parseISO } from 'date-fns';
 import User from '../models/User';
 import Meetup from '../models/Meetup';
+import File from '../models/File';
 import Subscription from '../models/Subscription';
 
 import CancellationMail from '../jobs/CancellationMail';
@@ -28,6 +29,11 @@ class MeetupController {
           model: User,
           as: 'user',
           attributes: ['id', 'name'],
+        },
+        {
+          model: File,
+          as: 'file',
+          attributes: ['id', 'name', 'path', 'url'],
         },
       ],
       limit: 10,
