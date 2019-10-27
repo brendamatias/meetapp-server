@@ -5,5 +5,4 @@ dist
 
 tmp/uploads/*
 
-!tmp/uploads/.gitkeep
 !tmp/uploads/default
