@@ -44,5 +44,8 @@
     "prettier": "^1.18.2",
     "sequelize-cli": "^5.5.1",
     "sucrase": "^3.10.1"
+  },
+  "engines": {
+    "yarn": "1.x"
   }
 }
